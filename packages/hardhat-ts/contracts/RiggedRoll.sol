@@ -1,7 +1,6 @@
 pragma solidity >=0.8.0 <0.9.0;
 //SPDX-License-Identifier: MIT
 
-import 'hardhat/console.sol';
 import './DiceGame.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
@@ -74,8 +73,6 @@ contract RiggedRoll is Ownable {
     bytes32 prevHash = blockhash(block.number - 1);
     bytes32 hash = keccak256(abi.encodePacked(prevHash, address(diceGame), nonce));
     uint256 roll = uint256(hash) % 16;
-
-    console.log('\t', '   Rigged Game Roll:', roll);
 
     emit RiggRolled(roll);
 

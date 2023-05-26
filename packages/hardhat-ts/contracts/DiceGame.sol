@@ -1,7 +1,6 @@
 pragma solidity >=0.8.0 <0.9.0;
-//SPDX-License-Identifier: MIT
 
-import 'hardhat/console.sol';
+//SPDX-License-Identifier: MIT
 
 contract DiceGame {
   uint256 public nonce = 0;
@@ -24,8 +23,6 @@ contract DiceGame {
     bytes32 prevHash = blockhash(block.number - 1);
     bytes32 hash = keccak256(abi.encodePacked(prevHash, address(this), nonce));
     uint256 roll = uint256(hash) % 16;
-
-    console.log('THE ROLL IS ', roll);
 
     nonce++;
     prize += ((msg.value * 40) / 100);
