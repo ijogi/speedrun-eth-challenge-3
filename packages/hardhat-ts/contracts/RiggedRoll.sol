@@ -18,6 +18,9 @@ error AmountIsTooLarge(uint256 amount, uint256 balance);
 /// @notice Thrown when a roll in the rigged game fails
 error FailedToRoll();
 
+/// @notice Thrown when a call to roll the dice in DiceGame contract fails
+error CallingDiceGameRollFailed();
+
 /// @title RiggedRoll
 /// @author Indrek Jogi
 /// @notice This contract allows for a manipulated roll in the DiceGame
@@ -32,6 +35,9 @@ contract RiggedRoll is Ownable {
   /// @notice Emitted when a withdrawal is made from the contract
   /// @param amount The amount that has been withdrawn
   event Withdrawal(uint256 amount);
+
+  /// @notice Emitted when a roll operation in the DiceGame contract is successfully executed
+  event SuccessfulRoll();
 
   /// @dev Initializes a new instance of the contract and sets the DiceGame contract
   /// @param diceGameAddress The address of the DiceGame contract
@@ -70,10 +76,13 @@ contract RiggedRoll is Ownable {
 
     emit RiggRolled(roll);
 
-    if (roll <= 2) {
-      diceGame.rollTheDice{value: 0.0021 ether}();
-    } else {
+    if (roll > 2) {
       revert FailedToRoll();
+    }
+    try diceGame.rollTheDice{value: 0.002 ether}() {
+      emit SuccessfulRoll();
+    } catch {
+      revert CallingDiceGameRollFailed();
     }
   }
 
